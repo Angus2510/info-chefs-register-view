@@ -1,0 +1,94 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model BaseRegistration {
+  id                     String                  @id @default(cuid())
+  createdAt              DateTime                @default(now())
+  updatedAt              DateTime                @updatedAt
+  reference              String                  @unique
+  formType               String
+  paymentStatus          String
+  paymentMethod          String?
+  totalPrice             Float
+  boothRegistration      BoothRegistration?
+  bulkRegistration       BulkRegistration?
+  individualRegistration IndividualRegistration?
+  sponsorRegistration    SponsorRegistration?
+}
+
+model IndividualRegistration {
+  id                 String           @id @default(cuid())
+  name               String
+  idNumber           String
+  email              String
+  contactNumber      String
+  invoicingDetails   String
+  attendeeType       String
+  isMember           Boolean
+  numberOfDays       String
+  selectedDate       String?
+  selectedPricing    String
+  baseRegistrationId String           @unique
+  baseRegistration   BaseRegistration @relation(fields: [baseRegistrationId], references: [id])
+}
+
+model BulkRegistration {
+  id                 String           @id @default(cuid())
+  organizationType   String
+  schoolName         String
+  vatNumber          String?
+  contactPersonName  String
+  contactPersonEmail String
+  contactPersonPhone String
+  memberStudents     Int
+  nonMemberStudents  Int
+  memberTeachers     Int
+  nonMemberTeachers  Int
+  numberOfDays       String
+  selectedDate       String?
+  baseRegistrationId String           @unique
+  baseRegistration   BaseRegistration @relation(fields: [baseRegistrationId], references: [id])
+}
+
+model BoothRegistration {
+  id                   String           @id @default(cuid())
+  exhibitorSize        String?
+  educationOption      String?
+  industryOption       String?
+  exhibitorType        String?
+  companyName          String
+  companyAddress       String
+  companyEmail         String
+  companyContactNumber String
+  companyVAT           String
+  companyContactPerson String
+  priceBeforeVAT       Float
+  vatAmount            Float
+  baseRegistrationId   String           @unique
+  baseRegistration     BaseRegistration @relation(fields: [baseRegistrationId], references: [id])
+}
+
+model SponsorRegistration {
+  id                    String           @id @default(cuid())
+  sponsorshipType       String
+  competitionPantryType String
+  partnerTier           String
+  companyName           String
+  companyAddress        String
+  companyEmail          String
+  companyContactNumber  String
+  companyVAT            String
+  companyContactPerson  String
+  basePrice             Float
+  discount              Float
+  priceBeforeVAT        Float
+  vatAmount             Float
+  baseRegistrationId    String           @unique
+  baseRegistration      BaseRegistration @relation(fields: [baseRegistrationId], references: [id])
+}
