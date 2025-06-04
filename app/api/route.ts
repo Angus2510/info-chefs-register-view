@@ -169,13 +169,13 @@ export async function GET() {
       attendeeType: string; // Changed from literal type to string
       isMember: boolean;
       numberOfDays: string; // Changed from literal type to string
-      selectedDate?: string;
+      selectedDate?: string | null;
       selectedPricing: string;
     }
     interface PrismaBulkRegistration {
       organizationType: string; // Changed from literal type to string
       schoolName: string;
-      vatNumber?: string;
+      vatNumber?: string | null;
       contactPersonName: string;
       contactPersonEmail: string;
       contactPersonPhone: string;
@@ -184,12 +184,12 @@ export async function GET() {
       memberTeachers: number;
       nonMemberTeachers: number;
       numberOfDays: string; // Changed from literal type to string
-      selectedDate?: string;
+      selectedDate?: string | null;
     }
     interface PrismaBoothRegistration {
-      exhibitorSize?: string; // Changed from literal type to string
-      educationOption?: string;
-      industryOption?: string;
+      exhibitorSize?: string | null; // Accepts string or null
+      educationOption?: string | null;
+      industryOption?: string | null;
       companyName: string;
       companyAddress: string;
       companyEmail: string;
@@ -239,24 +239,33 @@ export async function GET() {
 
         if (reg.individualRegistration) {
           type = "individual";
+          const { selectedDate, ...rest } = reg.individualRegistration;
           data = {
-            ...reg.individualRegistration,
+            ...rest,
+            selectedDate: selectedDate ?? undefined,
             paymentStatus: reg.paymentStatus,
             reference: reg.reference,
             totalPrice: reg.totalPrice,
           } as IndividualRegistrationData;
         } else if (reg.bulkRegistration) {
           type = "bulk";
+          const { selectedDate, ...rest } = reg.bulkRegistration;
           data = {
-            ...reg.bulkRegistration,
+            ...rest,
+            selectedDate: selectedDate ?? undefined,
             paymentStatus: reg.paymentStatus,
             reference: reg.reference,
             totalPrice: reg.totalPrice,
           } as BulkRegistrationData;
         } else if (reg.boothRegistration) {
           type = "booth";
+          const { exhibitorSize, educationOption, industryOption, ...rest } =
+            reg.boothRegistration;
           data = {
-            ...reg.boothRegistration,
+            ...rest,
+            exhibitorSize: exhibitorSize ?? undefined,
+            educationOption: educationOption ?? undefined,
+            industryOption: industryOption ?? undefined,
             paymentStatus: reg.paymentStatus,
             reference: reg.reference,
             totalPrice: reg.totalPrice,
