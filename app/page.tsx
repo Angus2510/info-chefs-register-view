@@ -227,7 +227,7 @@ export default function Home() {
                 className="mt-4"
                 onClick={() => setSelectedRegistration(null)}
               >
-                Close
+                Close!
               </Button>
             </div>
           </div>
