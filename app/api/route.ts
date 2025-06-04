@@ -160,9 +160,76 @@ export async function GET() {
         { status: 404 }
       );
     }
+    interface PrismaIndividualRegistration {
+      name: string;
+      idNumber: string;
+      email: string;
+      contactNumber: string;
+      invoicingDetails: string;
+      attendeeType: string; // Changed from literal type to string
+      isMember: boolean;
+      numberOfDays: string; // Changed from literal type to string
+      selectedDate?: string;
+      selectedPricing: string;
+    }
+    interface PrismaBulkRegistration {
+      organizationType: string; // Changed from literal type to string
+      schoolName: string;
+      vatNumber?: string;
+      contactPersonName: string;
+      contactPersonEmail: string;
+      contactPersonPhone: string;
+      memberStudents: number;
+      nonMemberStudents: number;
+      memberTeachers: number;
+      nonMemberTeachers: number;
+      numberOfDays: string; // Changed from literal type to string
+      selectedDate?: string;
+    }
+    interface PrismaBoothRegistration {
+      exhibitorSize?: string; // Changed from literal type to string
+      educationOption?: string;
+      industryOption?: string;
+      companyName: string;
+      companyAddress: string;
+      companyEmail: string;
+      companyContactNumber: string;
+      companyVAT: string;
+      companyContactPerson: string;
+      priceBeforeVAT: number;
+      vatAmount: number;
+    }
+
+    interface PrismaSponsorRegistration {
+      sponsorshipType: string;
+      competitionPantryType: string;
+      partnerTier: string;
+      companyName: string;
+      companyAddress: string;
+      companyEmail: string;
+      companyContactNumber: string;
+      companyVAT: string;
+      companyContactPerson: string;
+      basePrice: number;
+      discount: number;
+      priceBeforeVAT: number;
+      vatAmount: number;
+    }
+
+    interface PrismaBaseRegistration {
+      id: string;
+      createdAt: Date;
+      paymentStatus: string;
+      reference: string;
+      totalPrice: number;
+      individualRegistration?: PrismaIndividualRegistration | null;
+      bulkRegistration?: PrismaBulkRegistration | null;
+      boothRegistration?: PrismaBoothRegistration | null;
+      sponsorRegistration?: PrismaSponsorRegistration | null;
+    }
 
     const transformedRegistrations: RegistrationData[] = registrations.map(
-      (reg) => {
+      (reg: PrismaBaseRegistration): RegistrationData => {
         let type: "individual" | "bulk" | "booth" | "sponsor";
         let data:
           | IndividualRegistrationData
